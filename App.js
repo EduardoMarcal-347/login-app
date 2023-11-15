@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Button, ActivityIndicator, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  ActivityIndicator,
+  Image,
+  TextInput,
+} from "react-native";
 import { useState } from "react";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
@@ -13,11 +21,14 @@ export const onLogout = async () => {
 };
 
 GoogleSignin.configure({
-  webClientId: "1011384308095-96u9sgmhehb0ao2o0chvbibf02opdsh5.apps.googleusercontent.com",
+  webClientId:
+    "1011384308095-96u9sgmhehb0ao2o0chvbibf02opdsh5.apps.googleusercontent.com",
 });
 
 const LoginScreen = ({ login }) => {
   const [isSigninInProgress, setIsSigninInProgress] = useState(false);
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setpasswordText] = useState("");
 
   const handleLogin = async () => {
     try {
@@ -36,7 +47,24 @@ const LoginScreen = ({ login }) => {
     <View style={styles.layout}>
       {isSigninInProgress && <ActivityIndicator />}
       <Text style={styles.title}>Login</Text>
-      <Button title="entrar" onPress={handleLogin} />
+      <TextInput
+        placeholder="Endereço de e-mail"
+        value={emailText}
+        onChangeText={(text) => setEmailText(text)}
+        style={styles.loginInput}
+      />
+      <TextInput
+        placeholder="Senha"
+        value={passwordText}
+        onChangeText={(text) => setpasswordText(text)}
+        style={styles.loginInput}
+      />
+      <View style={styles.line}>
+        <Button title="Entrar"/>
+      </View>
+      <Button title="Entrar com Google" onPress={handleLogin} />
+      <Text style={{ color: "grey", marginVertical: 10 }}>ou</Text>
+      <Button title="Cadastrar" />
     </View>
   );
 };
@@ -58,7 +86,15 @@ const HomeScreen = ({ user, login }) => (
 
 const App = () => {
   const [user, setUser] = useState(false);
-  return <View style={styles.container}>{user ? <HomeScreen user={user} login={setUser} /> : <LoginScreen login={setUser} />}</View>;
+  return (
+    <View style={styles.container}>
+      {user ? (
+        <HomeScreen user={user} login={setUser} />
+      ) : (
+        <LoginScreen login={setUser} />
+      )}
+    </View>
+  );
 };
 
 export default App;
@@ -82,6 +118,21 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 15,
     marginBottom: 10,
-    color: 'grey'
-  }
+    color: "grey",
+  },
+  loginInput: {
+    borderWidth: 1,
+    padding: 8,
+    width: "80%",
+    marginBottom: 15,
+  },
+  line: {
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
+    marginVertical: 10,
+    minHeight: 1,
+    width: "80%",
+    paddingBottom: 18,
+    marginBottom: 18,
+  },
 });
